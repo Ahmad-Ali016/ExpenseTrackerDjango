@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Hotels</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">List of Hotels</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header">
+                        <h3 class="card-title">List of Hotels</h3>
+                        <div style="text-align: right;">
+                            <a href="{% url 'add_hotel' %}">
+                            <button type="button" class="btn btn-primary mb-2">
+                                Add Hotel
+                            </button>
+                        </a>
+                        </div>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-secondary">
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Hotel Name</th>
+                                <th>Location</th>
+                                <th>Business Email</th>
+                                <th>Phone</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for hotel in hotels %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <!-- Hotel Name clickable -->
+                                <td>
+                                    {{ hotel.name }}
+                                </td>
+
+                                <td>{{ hotel.location|default:"N/A" }}</td>
+                                <td>{{ hotel.business_email|default:"N/A" }}</td>
+                                <td>{{ hotel.phone|default:"N/A" }}</td>
+
+                                <!-- Shorten long text -->
+                                <td>{{ hotel.description|truncatewords:10|default:"No description" }}</td>
+                                <td>
+<!--                                    <a href="{% url 'list_room_types' hotel.id %}">-->
+<!--                                        <button type="button" class="btn btn-primary mb-2">-->
+<!--                                            View Room Types-->
+<!--                                        </button>-->
+<!--                                    </a>-->
+                                    <a href="{% url 'delete_hotel' hotel.id %}">
+                                        <button type="button" class="btn btn-danger mb-2">
+                                            Delete
+                                        </button>
+                                    </a>
+                                    <a href="{% url 'edit_hotel' hotel.id %}">
+                                        <button type="button" class="btn btn-info mb-2">
+                                            Edit
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">No hotels found.</td>
+                            </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Rooms List</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">List of Rooms</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header"><h3 class="card-title">All Rooms</h3></div>
+
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-secondary">
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Room Number</th>
+                                <th>Room Type</th>
+                                <th>Hotel</th>
+                                <th>Floor</th>
+                                <th>Status</th>
+                                <th>Active</th>
+                                <th>Created</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for room in rooms %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <!-- Room Number clickable -->
+                                <td>
+                                    <a href="#"
+                                       class="text-decoration-none fw-semibold text-primary">
+                                        {{ room.room_number }}
+                                    </a>
+                                </td>
+
+                                <td>{{ room.room_type.name }}</td>
+                                <td>{{ room.room_type.hotel.name }}</td>
+                                <td>{{ room.floor }}</td>
+
+                                <!-- Status -->
+                                <td>
+                                    {% if room.status == 'available' %}
+                                    <span class="badge bg-success">Available</span>
+                                    {% elif room.status == 'occupied' %}
+                                    <span class="badge bg-danger">Occupied</span>
+                                    {% elif room.status == 'maintenance' %}
+                                    <span class="badge bg-warning text-dark">Maintenance</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Unknown</span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Active -->
+                                <td>
+                                    {% if room.is_active %}
+                                    <span class="badge bg-primary">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-success">
+                                        {{ room.created_at|date:"M d, Y" }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">
+                                    No rooms found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

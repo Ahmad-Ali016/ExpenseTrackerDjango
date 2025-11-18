@@ -1,0 +1,124 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Expenses</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">List of Expenses</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header">
+                        <h3 class="card-title">List of Expenses</h3>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning">Choose Category</button>
+                            <button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                {% for category in categories %}
+                                    <li><a class="dropdown-item" href="{% url 'list_expenses' %}?category={{ category.name }}">{{ category.name }}</a></li>
+                                {% endfor %}
+                                <li><a class="dropdown-item" href="/list-expenses">all</a></li>
+
+                            </ul>
+                        </div>
+                        <div style="text-align: right;">
+                            <a href="{% url 'add_expense' %}">
+                            <button type="button" class="btn btn-primary mb-2">
+                                Add Expense
+                            </button>
+                        </a>
+                        </div>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-secondary">
+                            <tr>
+                                <th>S No.</th>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Category</th>
+                                <th>Tags</th>
+                                <th>Actions</th>
+{#                                <th>Created At</th>#}
+{#                                <th>Updated At</th>#}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for expense in expenses %}
+                            <tr>
+                                <td> {{ forloop.counter }} </td>
+                                <td>{{ expense.name }}</td>
+                                <td>{{ expense.amount }}</td>
+                                <td>{% if expense.category %}
+                                    <b><span {% if expense.category.name == "Travelling" %}style="color: red" {% endif %}>{{ expense.category.name }}</span></b>
+                                    {% else %}
+                                     -
+                                {% endif %}</td>
+                                <td>
+                                    {% for tag in expense.tags.all %}
+
+                                        <span class="badge rounded-pill text-bg-info">{{ tag.name }}</span>
+                                        {% endfor %}
+
+                                </td>
+                                {#                                <td>{{ expense.created_at }}</td>#}
+                                {#                                <td>{{ expense.updated_at }}</td>#}
+                                <td>
+                                    <a href="{% url 'delete_expense' expense.id %}">
+                                        <button type="button" class="btn btn-danger mb-2">
+                                            Delete
+                                        </button>
+                                    </a>
+                                    <a href="{% url 'edit_expense' expense.id %}">
+                                        <button type="button" class="btn btn-info mb-2">
+                                            Edit
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">No expenses found.</td>
+                            </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+{% endblock %}

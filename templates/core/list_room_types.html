@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!--begin::App Content Header-->
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Simple Tables</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">List of Room Types</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header"><h3 class="card-title">Room Types ({{hotel.name}}) </h3></div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-secondary">
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Room Type</th>
+                                <th>Description</th>
+                                <th>No. of Rooms</th>
+                                <th>Base Price</th>
+                                <th>Max Guests</th>
+                                <th>Amenities</th>
+                                <th>Hotel</th>
+                                <th>Created</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for room_type in room_types %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <!-- Clickable Room Type Name -->
+                                <td>
+                                    <a href="{% url 'list_rooms_by_room_type' room_type.hotel.id room_type.id %}"
+                                       class="text-decoration-none fw-semibold text-primary">
+                                        {{ room_type.name }}
+                                    </a>
+                                </td>
+
+                                <td>{{ room_type.description|truncatewords:10|default:"No description" }}</td>
+                                <td>{{ room_type.room_count }}</td>
+
+                                <!-- Price badge -->
+                                <td>
+          <span class="badge bg-success">
+            ${{ room_type.base_price }}
+          </span>
+                                </td>
+
+                                <td>{{ room_type.max_guests }}</td>
+
+                                <td>{{ room_type.amenities|truncatewords:8|default:"N/A" }}</td>
+
+                                <td>
+          <span class="badge bg-info text-dark">
+            {{ room_type.hotel.name }}
+          </span>
+                                </td>
+
+                                <td>
+          <span class="badge bg-secondary">
+            {{ room_type.created_at|date:"M d, Y" }}
+          </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">No room types found.</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+{% endblock %}
