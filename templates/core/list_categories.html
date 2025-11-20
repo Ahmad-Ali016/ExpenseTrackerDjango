@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Categories</h3></div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">List of Categories</li>
+                </ol>
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::App Content Header-->
+<!--begin::App Content-->
+<div class="app-content">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-12">
+                    <div class="card-header">
+                        <h3 class="card-title">List of Categories</h3>
+                        <div style="text-align: right;">
+                            <a href="/download-categories-pdf">
+                                <button type="button" class="btn btn-primary mb-2">
+                                    Download Categories
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-secondary">
+                            <tr>
+                                <th>S No.</th>
+                                <th>Category</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for category in categories %}
+                            <tr>
+                                <td> {{ forloop.counter }} </td>
+                                <td> {{ category.name }} </td>
+                                {#                                <td>{{ expense.created_at }}</td>#}
+                                {#                                <td>{{ expense.updated_at }}</td>#}
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">No expenses found.</td>
+                            </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+{% endblock %}
