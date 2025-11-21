@@ -27,9 +27,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-12">
-                    <div class="card-header">
+                    <div class="card-header position-relative" style="min-height: 60px;">
                         <h3 class="card-title">List of Expenses</h3>
-                        <div class="btn-group">
+                        <!-- Bottom-left dropdown -->
+                        <div class="btn-group position-absolute" style="bottom: 25px; left: 10px;">
                             <button type="button" class="btn btn-warning">Choose Category</button>
                             <button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split"
                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,7 +38,9 @@
                             </button>
                             <ul class="dropdown-menu">
                                 {% for category in categories %}
-                                    <li><a class="dropdown-item" href="{% url 'list_expenses' %}?category={{ category.name }}">{{ category.name }}</a></li>
+                                    <li><a class="dropdown-item"
+                                           href="{% url 'list_expenses' %}?category={{ category.name }}">{{ category.name }}</a>
+                                    </li>
                                 {% endfor %}
                                 <li><a class="dropdown-item" href="/list-expenses">all</a></li>
 
@@ -45,10 +48,17 @@
                         </div>
                         <div style="text-align: right;">
                             <a href="{% url 'add_expense' %}">
-                            <button type="button" class="btn btn-primary mb-2">
-                                Add Expense
-                            </button>
-                        </a>
+                                <button type="button" class="btn btn-primary mb-2">
+                                    Add Expense
+                                </button>
+                            </a>
+                        </div>
+                        <div style="text-align: right;">
+                            <a href="{% url 'download_expenses_pdf' %}">
+                                <button type="button" class="btn btn-primary mb-2">
+                                    Download Expenses
+                                </button>
+                            </a>
                         </div>
                     </div>
 
@@ -68,7 +78,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for expense in expenses %}
+                                {% for expense in expenses %}
                             <tr>
                                 <td> {{ forloop.counter }} </td>
                                 <td>{{ expense.name }}</td>

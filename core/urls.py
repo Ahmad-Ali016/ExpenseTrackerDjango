@@ -1,5 +1,6 @@
 from django.urls import include, path
-from core.views import index_view, list_expenses_view, add_expense_view, edit_expense, delete_expense
+from core.views import index_view, list_expenses_view, add_expense_view, edit_expense, delete_expense, list_categories, \
+    list_tags, download_expenses_pdf, download_categories_pdf, download_tags_pdf
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -8,6 +9,11 @@ urlpatterns = [
     path('expenses/add/', add_expense_view, name='add_expense'),
     path('edit-expense/<int:expense_id>', edit_expense, name='edit_expense'),
     path('delete-expense/<int:expense_id>', delete_expense, name='delete_expense'),
+    path('list-categories', list_categories, name='list_categories'),
+    path('list-tags', list_tags, name='list_tags'),
+    path('download-expenses-pdf', download_expenses_pdf, name='download_expenses_pdf'),
+    path('download-categories-pdf', download_categories_pdf, name='download_categories_pdf'),
+    path('download-tags-pdf', download_tags_pdf, name='download_tags_pdf'),
 
     # # Hotel URLs
     # path("list-hotels/", list_hotels_view, name="list_hotels_view"),
