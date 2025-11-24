@@ -9,11 +9,87 @@ from django.contrib.auth.decorators import login_required
 from .utils.pdf_utils import generate_pdf_response, default_style
 from reportlab.platypus import Paragraph
 
+from datetime import datetime, date, timedelta
+from django.utils.timezone import localtime
+
+
 # Create your views here.
 def index_view(request):
     return HttpResponse("Expense Tracker Django — Home Page")
 
 def list_expenses_view(request):
+    # Base queryset
+    start_str = None
+    end_str = None
+    qs = Expense.objects.all().order_by('-created_at')
+
+    # 1) Category filter (existing behaviour) ---
+    category_name = request.GET.get('category')
+    if category_name:
+        try:
+            category = Category.objects.get(name=category_name)
+            qs = qs.filter(category=category)
+        except Category.DoesNotExist:
+            # no category found => empty queryset
+            qs = qs.none()
+
+    # 2) Predefined filters: today / week / month ---
+    filter_by = request.GET.get('filter')  # expected values: "today", "week", "month"
+    today = date.today()
+
+    if filter_by == "today":
+        # filter by created_at date equal to today
+        qs = qs.filter(created_at__date=today)
+
+    elif filter_by == "week":
+        # start of week (Mon) to today
+        start_of_week = today - timedelta(days=today.weekday())
+        qs = qs.filter(created_at__date__gte=start_of_week, created_at__date__lte=today)
+
+    elif filter_by == "month":
+        qs = qs.filter(created_at__year=today.year, created_at__month=today.month)
+
+        # 3) Custom date range (overrides/works with the above)
+        # Accepts start and end in YYYY-MM-DD format
+        start_str = request.GET.get('start')
+        end_str = request.GET.get('end')
+        if start_str or end_str:
+            try:
+                if start_str:
+                    start_date = datetime.strptime(start_str, "%Y-%m-%d").date()
+                else:
+                    # if no start provided, use a far past date
+                    start_date = date(1970, 1, 1)
+
+                if end_str:
+                    end_date = datetime.strptime(end_str, "%Y-%m-%d").date()
+                else:
+                    end_date = today
+
+                # apply range filter
+                qs = qs.filter(created_at__date__range=[start_date, end_date])
+            except ValueError:
+                # invalid date format — ignore range filter (or you could set qs = qs.none())
+                pass
+
+    # Final queryset
+    expenses = qs.order_by('-created_at')
+
+    # categories for dropdown
+    categories = Category.objects.all().order_by('name')
+
+    context = {
+        'expenses': expenses,
+        'categories': categories,
+        'current_category': category_name or '',
+        'current_filter': filter_by or '',
+        'start_date': start_str if start_str else None,
+        'end_date': end_str if start_str else None,
+    }
+    return render(request, 'core/list_expenses.html', context)
+
+
+"""
     if request.GET.get('category'):
         category = Category.objects.get(name=request.GET.get('category'))
         expenses = Expense.objects.filter(category=category).order_by('-created_at')
@@ -27,6 +103,7 @@ def list_expenses_view(request):
     }
     return render(request, 'core/list_expenses.html', context)
 
+"""
 @login_required
 def add_expense_view(request):
     if request.method == "POST":

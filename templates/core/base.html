@@ -1,10 +1,25 @@
 {% load static %}
-<!doctype html>
+
+{% load expense_tags %}
+
+<!-- simplest: prints the raw Decimal -->
+{#Total: {% total_expense as total %} {{ total }}#}
+
+{#<!-- formatted -->#}
+{#Total: Rs {% total_expense as total fmt=True %}{{ total }}  <!-- if you used as total, fmt=True won't work; use below -->#}
+{##}
+{#<!-- or directly show formatted string -->#}
+{#Total: Rs {% total_expense fmt=True %}#}
+{##}
+{#<!-- or get it into a variable for later -->#}
+{#{% total_expense as total %}#}
+{#<span class="badge bg-info">Total: Rs {{ total }}</span>#}
+
 <html lang="en">
 <!--begin::Head-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>AdminLTE 4 | Simple Tables</title>
+    <title>Expense Tracker</title>
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
     <meta name="color-scheme" content="light dark"/>
@@ -193,6 +208,11 @@
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                         <span class="d-none d-md-inline"> {{ request.user }}</span>
                     </a>
+                    <div class="ms-auto">
+{#                        {% load expense_tags %}#}
+                        {% total_expense as my_total %}
+                        <span class="">Total Expense<br>{{ my_total }}</span>
+                    </div>
                     <a href="{% url 'logout' %}">
                         <span class="d-none d-md-inline"> Logout </span>
                     </a>
